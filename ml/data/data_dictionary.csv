@@ -1,0 +1,23 @@
+column_name,data_type,description,example,allowed_values
+transaction_id,string,Unique identifier for each transaction.,T000001,T000001-T010095 (raw); pattern T + 6 digits
+collector_id,string,Unique identifier for the collector (drop-off agent / individual/business submitting e-waste).,C042,C001-C150
+recycler_id,string,Unique identifier for the recycler (buyer/processor of the e-waste).,R004,R001-R040
+material,string,Top-level e-waste material category.,PCB,PCB; Cable; Battery; CRT; LCD/display; Motor; Magnet-bearing assembly; Mixed plastics; Other
+subcategory,string,Specific subtype within the material category.,Motherboard,See data dictionary notes / material-specific subcategory lists
+weight_kg,float,Weight of the material lot in kilograms.,18.0,> 0 in cleaned data (raw may contain 0/negative/missing as data-quality issues)
+condition,string,Physical/quality condition of the material.,Good,Excellent; Good; Fair; Poor; Damaged
+city,string,City where the transaction/pickup occurred.,Delhi,One of 17 Indian cities used in generation (see README)
+state,string,State corresponding to the city.,Delhi,Indian state names
+latitude,float,"Approximate latitude of the transaction location (city-level, jittered).",28.6139,"Decimal degrees, roughly 8-31 for India"
+longitude,float,"Approximate longitude of the transaction location (city-level, jittered).",77.2090,"Decimal degrees, roughly 68-89 for India"
+quoted_price_per_kg,float,"Synthetic price per kg initially quoted/offered (INR, no currency symbol).",142.5,> 0 (synthetic; not a real market price)
+final_price_per_kg,float,Synthetic final negotiated price per kg after inspection (INR). Missing for non-Completed transactions.,145.0,"> 0, or blank if transaction_status != Completed"
+estimated_value,float,"Estimated transaction value = weight_kg x quoted_price_per_kg (approx, with generation noise).",2565.0,"Numeric, INR"
+final_sale_value,float,Final settled transaction value = weight_kg x final_price_per_kg (approx). Missing for non-Completed transactions.,2610.0,"Numeric, INR, or blank if not Completed"
+transaction_date,date (YYYY-MM-DD),Date the transaction was recorded.,2026-05-18,2025-01-01 to 2026-09-20
+transaction_status,string,Current status of the transaction.,Completed,Completed; Pending; Cancelled; Rejected
+pickup_type,string,How the material was transferred from collector to recycler.,Recycler Pickup,Collector Drop-off; Recycler Pickup
+payment_method,string,Mode of payment used for the transaction.,UPI,UPI; Bank Transfer; Cash; Wallet
+known_anomaly,int (0/1),"[Ground-truth file only] 1 if the transaction was synthetically injected as an unusual/anomalous record, else 0.",1,0; 1
+anomaly_type,string,[Ground-truth file only] Category of injected anomaly.,price_outlier_low,none; price_outlier_low; price_outlier_high; weight_outlier_low; weight_outlier_high; value_mismatch; geo_mismatch; suspicious_combination
+anomaly_reason,string,[Ground-truth file only] Human-readable explanation of why the record is flagged 'Unusual transaction — review'.,Price per kg far below normal synthetic distribution for PCB,Free text
